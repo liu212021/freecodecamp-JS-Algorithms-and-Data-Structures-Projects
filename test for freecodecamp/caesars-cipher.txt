@@ -1,0 +1,13 @@
+function rot13(str) {
+  let res=[];
+  for(let i=0;i<str.length;i++){
+    let n=str.charCodeAt(i);
+    if(n<65 || n>90) res.push(str[i]);
+    else if(n+13>90) res.push(String.fromCharCode(n+13-26))
+    else res.push(String.fromCharCode(n+13));
+  }
+  return res.join("");
+}
+
+console.log(rot13("SERR CVMMN!"));
+console.log(String.fromCharCode(65+13,90+13-26,78+13-26));

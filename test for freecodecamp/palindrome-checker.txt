@@ -1,0 +1,20 @@
+function palindrome(str) {
+  str = str.toLowerCase().replace(/[\W_]/g, '');
+  if(str.length==2){
+    if(str[0]==str[1]) return true;
+    else return false;
+  }
+  else if(str.length==1) 
+    return true;
+  else 
+  {
+    let n=str.length-1;
+    return palindrome(str.slice(1,n)) && str[0]==str[n];
+    }
+}
+
+palindrome("eye");
+
+let a="_eye";
+console.log(a[0])
+console.log(palindrome("123"))

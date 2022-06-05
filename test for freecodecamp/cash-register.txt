@@ -1,0 +1,83 @@
+function needCash(money){
+    let cashmap=[100,20,10,5,1,0.25,0.1,0.05,0.01];
+    let pills=[];
+    for(let i=0;i<=8;i++){
+      money=Number(money).toFixed(2);
+      pills.push(Math.floor(money/cashmap[i]));
+      money=money%cashmap[i];
+    }
+    return  pills;
+}
+function haveCoin(cid){
+  let cashmap=[0.01,0.05,0.1,0.25,1,5,10,20,100];
+  let pills=[];
+  for (let i=8;i>=0;i--) {
+      pills.push(Number((cid[i][1]/cashmap[i]).toFixed(2)));
+  }
+  return pills;
+}
+
+function checkCashRegister(price, cash, cid) {
+let status="OPEN";
+let change=[];
+let rawfund = 0;
+for (let coin of cid) {
+  rawfund += coin[1];
+}
+let fund = rawfund.toFixed(2);
+if(cash-price>fund) 
+  return {status: "INSUFFICIENT_FUNDS", change: []};
+else{
+    let needcash=needCash(cash-price);
+    let havecash=haveCoin(cid);
+    let cashmap=[100,20,10,5,1,0.25,0.1,0.05,0.01]
+    let rescash=[];
+    console.log(havecash); 
+    console.log(needcash);
+
+    for(let i=0;i<=8;i++){
+      if(needcash[i]>=havecash[i]){
+          rescash.push(havecash[i]);
+          needcash[i+1] = needcash[i+1]+(
+          (needcash[i]-havecash[i])*cashmap[i]/cashmap[i+1]
+        );
+      }
+      else{
+        rescash.push(needcash[i]);
+      }
+    }
+    console.log(needcash);
+    console.log(rescash);
+    let sum=0;
+    for(let i=0;i<=8;i++){
+      sum=sum+havecash[i]-rescash[i];
+    }
+    if(sum==0){
+        status="CLOSED";
+        for(let i=0;i<=8;i++){
+          cid[i][1]=(rescash[8-i])*cashmap[8-i];
+          change.push(cid[i]);
+     }
+     change=change.reverse();
+    }
+    else if(needcash.length>9)
+    //(sum==1 && rescash[8]==1)这里实在抱歉，懒得改了,借位超了还算说得过去
+        return {status: "INSUFFICIENT_FUNDS", change: []};
+    else{
+      for(let i=0;i<=8;i++){
+        cid[i][1]=rescash[8-i]*cashmap[8-i];
+        if(rescash[8-i]>0){
+          change.push(cid[i]);
+        }
+      }
+    }
+
+    change=change.reverse();
+    return {status:status, change:change};
+}
+
+}
+//因为数组序号混乱带来了一堆麻烦，代码自己都不想看，下次一定！！！
+console.log(checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
+
+ 
